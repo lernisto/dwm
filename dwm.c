@@ -205,7 +205,9 @@ static void setmfact(const Arg *arg);
 static void setup(void);
 static void showhide(Client *c);
 static void sigchld(int unused);
+static void dmenu_spawn(const Arg *arg);
 static void spawn(const Arg *arg);
+static void exec(const Arg *arg);
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *);
@@ -1634,20 +1636,28 @@ sigchld(int unused)
 	while (0 < waitpid(-1, NULL, WNOHANG));
 }
 
+
+void dmenu_spawn(const Arg *arg){
+	dmenumon[0] = '0' + selmon->num;
+	spawn(arg);
+}
+
 void
 spawn(const Arg *arg)
 {
-	if (arg->v == dmenucmd)
-		dmenumon[0] = '0' + selmon->num;
 	if (fork() == 0) {
-		if (dpy)
-			close(ConnectionNumber(dpy));
-		setsid();
-		execvp(((char **)arg->v)[0], (char **)arg->v);
-		fprintf(stderr, "dwm: execvp %s", ((char **)arg->v)[0]);
-		perror(" failed");
-		exit(EXIT_SUCCESS);
+		exec(arg);
 	}
+}
+
+void exec(const Arg *arg){
+	if (dpy)
+		close(ConnectionNumber(dpy));
+	setsid();
+	execvp(((char **)arg->v)[0], (char **)arg->v);
+	fprintf(stderr, "dwm: execvp %s", ((char **)arg->v)[0]);
+	perror(" failed");
+	exit(EXIT_SUCCESS);
 }
 
 void
