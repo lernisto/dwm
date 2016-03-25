@@ -8,10 +8,10 @@ static const char dmenufont[]       = "monospace:size=12";
 static const char normbordercolor[] = "#073642";
 static const char normbgcolor[]     = "#002b36";
 static const char normfgcolor[]     = "#fdf6e3";
-static const char selbordercolor[]  = "#586e75";
+static const char selbordercolor[]  = "#2aa198";
 static const char selbgcolor[]      = "#073642";
 static const char selfgcolor[]      = "#fdf6e3";
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
@@ -59,34 +59,79 @@ static const char *termcmd[]  = { "x-terminal-emulator", NULL };
 static const char *wwwcmd[]  = { "x-www-browser", NULL };
 static const char *dwmcmd[] = { "dwm", NULL };
 
+static const char *cmd_wm_status[]={"wm-status",NULL};
+static const char *cmd_wm_window_list[]={"wm-window-list",NULL};
+static const char *cmd_wm_menu[]={"wm-menu",NULL};
+static const char *cmd_wm_launch[]={"wm-launch",NULL};
+static const char *cmd_wm_launch_primary[]={"wm-launch-primary",NULL};
+static const char *cmd_wm_launch_secondary[]={"wm-launch-secondary",NULL};
+static const char *cmd_wm_terminal[]={"wm-terminal",NULL};
+static const char *cmd_wm_explorer[]={"wm-explorer",NULL};
+static const char *cmd_wm_reader[]={"wm-reader",NULL};
+static const char *cmd_wm_web[]={"wm-web",NULL};
+static const char *cmd_wm_mail[]={"wm-mail",NULL};
+static const char *cmd_wm_media[]={"wm-media",NULL};
+static const char *cmd_wm_notices[]={"wm-notices",NULL};
+static const char *cmd_wm_lock[]={"wm-lock",NULL};
+static const char *cmd_mm_stop[]={"mm-stop",NULL};
+static const char *cmd_mm_next[]={"mm-next",NULL};
+static const char *cmd_mm_prior[]={"mm-prior",NULL};
+static const char *cmd_mm_play[]={"mm-play",NULL};
+static const char *cmd_mm_pause[]={"mm-pause",NULL};
+static const char *cmd_mm_toggle_play[]={"mm-toggle-play",NULL};
+static const char *cmd_audio_mute[]={"audio-mute",NULL};
+static const char *cmd_audio_unmute[]={"audio-unmute",NULL};
+static const char *cmd_audio_raise[]={"audio-raise",NULL};
+static const char *cmd_audio_lower[]={"audio-lower",NULL};
+
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_p,      dmenu_spawn,    {.v = dmenucmd } },
-	{ MODKEY,                       XK_w,      spawn,          {.v = wwwcmd } },
-	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_q,      exec,          {.v = dwmcmd } },
+	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+
+	{ MODKEY,                       XK_Tab,    view,           {0} },
+	{ MODKEY,                       XK_q,      exec,           {.v = dwmcmd } },
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_w,      spawn,          {.v = cmd_wm_web } },
+	{ MODKEY,                       XK_e,      spawn,          {.v = cmd_wm_explorer } },
+	{ MODKEY,                       XK_r,      spawn,          {.v = cmd_wm_reader } },
+	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_y,      spawn,          {.v = cmd_wm_terminal } },
+	{ MODKEY,                       XK_u,      spawn,          {.v = cmd_wm_terminal } },
+	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
+	{ MODKEY,                       XK_o,      spawn,          {.v = cmd_wm_terminal } },
+	{ MODKEY,                       XK_p,      dmenu_spawn,    {.v = dmenucmd } },
+
+
+	{ MODKEY,                       XK_a,      spawn,          {.v = cmd_wm_terminal } },
+	{ MODKEY,                       XK_s,      spawn,          {.v = cmd_wm_terminal } },
+	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_g,      spawn,          {.v = cmd_wm_terminal } },
+	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
+	{ MODKEY,                       XK_semicolon,      spawn,          {.v = cmd_wm_terminal } },
+	{ MODKEY,                       XK_apostrophe,      spawn,          {.v = cmd_wm_terminal } },
+	{ MODKEY,                       XK_Return, spawn,          {.v = cmd_wm_terminal } },
 	{ MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
-	{ MODKEY,                       XK_Tab,    view,           {0} },
+
+	{ MODKEY,                       XK_z,      spawn,          {.v = cmd_wm_terminal } },
 	{ MODKEY,                       XK_x,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_c,      spawn,          {.v = cmd_wm_terminal } },
+	{ MODKEY,                       XK_v,      spawn,          {.v = cmd_wm_terminal } },
+	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_n,      spawn,          {.v = cmd_wm_terminal } },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY,                       XK_slash,  spawn,          {.v = cmd_wm_terminal } },
+
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
