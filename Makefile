@@ -1,6 +1,6 @@
 # dwm - dynamic window manager
 # See LICENSE file for copyright and license details.
-
+include gitrev.mk
 include config.mk
 
 SRC = drw.c dwm.c util.c
@@ -23,6 +23,10 @@ ${OBJ}: config.h config.mk
 config.h:
 	@echo creating $@ from config.def.h
 	@cp config.def.h $@
+
+gitrev.mk:
+	echo -n "GITREV=:" >$@
+	git describe --long --dirty --abbrev=10 --tags --always >>$@
 
 dwm: ${OBJ}
 	@echo CC -o $@

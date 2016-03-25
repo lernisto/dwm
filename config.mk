@@ -1,5 +1,5 @@
 # dwm version
-VERSION = 6.1
+VERSION = "6.1${GITREV}"
 
 # Customize below to fit your system
 
